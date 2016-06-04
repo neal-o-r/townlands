@@ -1,3 +1,5 @@
+# Remove shapefiles from git, these were downloaded from
+# townlands.ie/page/data
 *.sh*
 *.prj
 *.dbf
