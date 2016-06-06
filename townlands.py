@@ -1,7 +1,5 @@
 import pandas as pd
-import geopandas as gpd
 import matplotlib.pyplot as plt
-from geopandas.plotting import plot_multipolygon
 import seaborn as sns; sns.set()
 
 
@@ -29,7 +27,8 @@ def top10(input_list):
 	return top_10
 
 def map_county_townlands(county, ireland=False):
-
+	
+	import geopandas as gpd
 	all_twnlds = gpd.GeoDataFrame.from_file('data/townlands.shp')
 	county = all_twnlds[all_twnlds.CO_NAME == county]	
 
@@ -42,7 +41,7 @@ def map_county_townlands(county, ireland=False):
 
 def map_counties(t_df, townland_density=False):
 
-
+	import geopandas as gpd
 	counties = gpd.GeoDataFrame.from_file('data/counties.shp')
 	
 	if townland_density:
