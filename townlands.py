@@ -7,7 +7,7 @@ import seaborn as sns; sns.set()
 
 def top5(input_list):
 	# makes a dict of strings -> no. of appearances
-	# returns the top ten strings
+	# returns the top ten strings and no. of appearances
 
 	counter_dict = {}
 	
@@ -28,19 +28,21 @@ def top5(input_list):
 
 	return top_5
 
-def map_county_townlands(county, ireland=False):
+
+def map_county_townlands(county, ireland=False, t_df=None):
+	# plots the townlands in a given county,
+	# if the ireland keyword is true it adds the 
+	# the other counties for context
 
 	all_twnlds = gpd.GeoDataFrame.from_file('data/townlands.shp')
 	county = all_twnlds[all_twnlds.CO_NAME == county]	
 
 	if ireland:
-		counties = gpd.GeoDataFrame.from_file('data/counties.shp')
-		counties.plot(colormap='Greens', alpha=0.3)
+		map_counties(t_df)
 	
 	county.plot(colormap='winter')
-	plt.show()
 
-def map_counties(t_df, townland_density=False, name=[]):
+def map_counties(t_df, townland_density=False, name=''):
 
 
 	counties = gpd.GeoDataFrame.from_file('data/counties.shp')
@@ -50,10 +52,11 @@ def map_counties(t_df, townland_density=False, name=[]):
 				(t_df.groupby('CO_NAME').CO_NAME.count()[row.NAME_TAG]/row.AREA)*1e6, axis=1)
 		# add a towlands/km^2 column
 		counties.Density.iloc[21] = counties.Density.iloc[21]/0.58
-		# Kerry has an incomplete survey, so I scale it by the % done the survey is.
+		# Kerry has an incomplete survey, so I scale it by the % surveyed.
 		# This is obviously a cheat, assuming that the townlands left will have the same average are as those
 		# already done, but it's better than leaving it out 	
 
+		# add a colour bar. this is gross.
 		vmin, vmax = counties.Density.min(), counties.Density.max()
 
 		ax = counties.plot(column='Density', scheme='equal_interval', 
@@ -66,28 +69,31 @@ def map_counties(t_df, townland_density=False, name=[]):
 		sm._A = []
 		fig.colorbar(sm, cax=cax)
 		
-		
+		# also plot a bar chart, with a mean-line
 		plt.figure()
 		ax = counties.sort('NAME_TAG').set_index('NAME_TAG').Density.plot(kind='bar') 
 
 		ax.axhline(counties.Density.mean(), color='r', linewidth=2, linestyle='--')
 		ax.set_ylabel(r'Townlands/km$^2$')
 
-	else:
+	else: # if the key word isn't set
+
+		# plot counties
 		counties.plot(colormap='Greens', alpha=0.3, axes=None)
+		
 		if len(name) != 0:
+			# if a string is given, then add scatter
+			# points of townlands starting with that string
+		
+			name_in = [i.upper().startswith(name.upper()) for i in t_df.NAME_TAG.values] 
+			place_w_name = t_df[name_in]
 			
-			name_in = [i.upper().endswith(name.upper()) for i in t_df.NAME_TAG.values] 
-			place_w_name = df[name_in]
-			
-			t_df['Name_in'] = [i.upper().endswith(name.upper()) for i in t_df.NAME_TAG.values]			
+			t_df['Name_in'] = [i.upper().startswith(name.upper()) for i in t_df.NAME_TAG.values]			
 			print t_df.groupby('CO_NAME').Name_in.sum()
 
 			plt.scatter(place_w_name.LONGITUDE.values, place_w_name.LATITUDE.values, s=3, color='r')
-			plt.title('Townlands with names ending with ' + name[0].upper() + name[1:])
+			plt.title('Townlands with names starting with ' + name[0].upper() + name[1:])
 			
-
-	plt.show()
 
 
 if __name__ == '__main__':
@@ -102,6 +108,8 @@ if __name__ == '__main__':
 	print('The most common beginnings to names are:\n')
 	print top5([i[:5] for i in df.NAME_TAG.values])	
 
-	#map_county_townlands('Kerry')
-	#map_counties(df, townland_density=False, name='crut')
+#	map_county_townlands('Kerry', t_df=df, ireland=True)
+	map_counties(df, name='balli')
+
+	plt.show()
 
