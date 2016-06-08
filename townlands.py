@@ -26,18 +26,14 @@ def top5(input_list):
 
 	return top_5
 
-<<<<<<< HEAD
-def map_county_townlands(county, ireland=False):
-	
-	import geopandas as gpd
-=======
 
 def map_county_townlands(county, ireland=False, t_df=None):
 	# plots the townlands in a given county,
 	# if the ireland keyword is true it adds the 
 	# the other counties for context
 
->>>>>>> 190c972c001c550198cf6583a67c7731b3886844
+	import geopandas as gpd
+
 	all_twnlds = gpd.GeoDataFrame.from_file('data/townlands.shp')
 	county = all_twnlds[all_twnlds.CO_NAME == county]	
 
@@ -49,6 +45,7 @@ def map_county_townlands(county, ireland=False, t_df=None):
 def map_counties(t_df, townland_density=False, name=''):
 
 	import geopandas as gpd
+
 	counties = gpd.GeoDataFrame.from_file('data/counties.shp')
 	
 	if townland_density:
@@ -113,7 +110,6 @@ if __name__ == '__main__':
 	print top5([i[:5] for i in df.NAME_TAG.values])	
 
 #	map_county_townlands('Kerry', t_df=df, ireland=True)
-	map_counties(df, name='balli')
+#	map_counties(df, name='balli')
 
 	plt.show()
-
