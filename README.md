@@ -2,7 +2,7 @@
 
 There are around 60,000 townlands in Ireland, and almost all (~96%) of them have been documented by townlands.ie. Their data set provides names (in Irish and English), as well as areas and shapefiles for all of the documented townlands. Using these data I did some simple analysis of the townlands, and made some maps.
 
-The number of townlands per sq km varies by almost a factor of 2 from the smallest to largest density, as the choropleth shows, with Monahan having the largest density.
+The number of townlands per sq km varies by almost a factor of 2 from the smallest to largest density, as the choropleth shows, with Monaghan having the largest density.
 
 ![alt tag](https://github.com/neal-o-r/townlands/blob/master/choropleth.png)
 
