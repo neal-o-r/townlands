@@ -3,28 +3,12 @@ import geopandas as gpd
 import matplotlib.pyplot as plt
 from geopandas.plotting import plot_multipolygon
 import seaborn as sns; sns.set()
-
+from collections import Counter
 
 def top5(input_list):
 	# makes a dict of strings -> no. of appearances
 	# returns the top ten strings and no. of appearances
-
-	counter_dict = {}
-	
-	for word in input_list:
-		if word in counter_dict:
-			counter_dict[word] += 1
-		else:
-			counter_dict[word] = 1
-
-	most_common = sorted(counter_dict, key = counter_dict.get, 
-                             reverse = True)
-
-	top_5 = [[],[]]
-	for i in range(5):
-		word = most_common[i]
-		top_5[0].append(word)
-		top_5[1].append(counter_dict[word])
+        top_5 = Counter(input_list).most_common(5)
 
 	return top_5
 
@@ -89,7 +73,7 @@ def map_counties(t_df, townland_density=False, name=''):
 			place_w_name = t_df[name_in]
 			
 			t_df['Name_in'] = [i.upper().startswith(name.upper()) for i in t_df.NAME_TAG.values]			
-			print t_df.groupby('CO_NAME').Name_in.sum()
+			print(t_df.groupby('CO_NAME').Name_in.sum())
 
 			plt.scatter(place_w_name.LONGITUDE.values, place_w_name.LATITUDE.values, s=3, color='r')
 			plt.title('Townlands with names starting with ' + name[0].upper() + name[1:])
@@ -102,11 +86,11 @@ if __name__ == '__main__':
 	ga_names = df[df.NAME_GA.notnull()].NAME_GA.values	
 	first_words = [i.split(' ')[0] for i in ga_names]
 	print('The most common first words in Irish are\n')
-	print top5(first_words)	
+	print(top5(first_words))
 
 
 	print('The most common beginnings to names are:\n')
-	print top5([i[:5] for i in df.NAME_TAG.values])	
+	print(top5([i[:5] for i in df.NAME_TAG.values]))	
 
 #	map_county_townlands('Kerry', t_df=df, ireland=True)
 	map_counties(df, name='balli')
