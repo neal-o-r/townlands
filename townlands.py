@@ -1,7 +1,5 @@
 import pandas as pd
-import geopandas as gpd
 import matplotlib.pyplot as plt
-from geopandas.plotting import plot_multipolygon
 import seaborn as sns; sns.set()
 from collections import Counter
 
@@ -18,6 +16,8 @@ def map_county_townlands(county, ireland=False, t_df=None):
 	# if the ireland keyword is true it adds the 
 	# the other counties for context
 
+	import geopandas as gpd
+
 	all_twnlds = gpd.GeoDataFrame.from_file('data/townlands.shp')
 	county = all_twnlds[all_twnlds.CO_NAME == county]	
 
@@ -28,6 +28,7 @@ def map_county_townlands(county, ireland=False, t_df=None):
 
 def map_counties(t_df, townland_density=False, name=''):
 
+	import geopandas as gpd
 
 	counties = gpd.GeoDataFrame.from_file('data/counties.shp')
 	
@@ -93,7 +94,6 @@ if __name__ == '__main__':
 	print(top5([i[:5] for i in df.NAME_TAG.values]))	
 
 #	map_county_townlands('Kerry', t_df=df, ireland=True)
-	map_counties(df, name='balli')
+#	map_counties(df, name='balli')
 
 	plt.show()
-
